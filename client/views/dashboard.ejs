@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html ng-app='myApp'>
+<head>
+	<title>blackjack</title>
+	<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="/bower_components/jquery/dist/jquery.min.js"></script>
+    <link href="/bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+    <script type ="text/javascript" src="/socket.io/socket.io.js"></script>
+    <script src="/bower_components/angular/angular.js"></script>
+    <script src="../js/controller/usersController.js"></script>
+    <script src="../js/model/userFactory.js"></script>
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+	
+	<script type="text/javascript">
+		var socket = io.connect();
+
+		// socket.on('global_result', function(data){
+		// 	$('#'+data._id+'+ td').attr('ng-bind', data.record.wins);
+		// 	$('#'+data._id+'+ td + td').attr('ng-bind', (data.record.wins/data.games.length*100) + " | number: 0");
+		// 	// $scope.update(data);
+		// });
+
+		socket.emit('connected', function(){
+			console.log('dashboard emit')
+		});
+		socket.on('user_result', function(data){
+			$('#record').text('Wins / Losses: '+data.record.wins+' / '+data.record.losses+'')
+		})
+	</script>
+	<script src="../static/js/game.js"></script>
+
+	<style type="text/css">
+
+		#upper_content {
+			height: 550px;
+		}
+
+		#table {
+				/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#002400+0,008a00+0,52b152+65,83c783+87,b4ddb4+97 */
+			background: #002400; /* Old browsers */
+			background: -moz-radial-gradient(center, ellipse cover,  #002400 0%, #008a00 0%, #52b152 65%, #83c783 87%, #b4ddb4 97%); /* FF3.6-15 */
+			background: -webkit-radial-gradient(center, ellipse cover,  #002400 0%,#008a00 0%,#52b152 65%,#83c783 87%,#b4ddb4 97%); /* Chrome10-25,Safari5.1-6 */
+			background: radial-gradient(ellipse at center,  #002400 0%,#008a00 0%,#52b152 65%,#83c783 87%,#b4ddb4 97%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+			filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#002400', endColorstr='#b4ddb4',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+			background-repeat: no-repeat;
+
+			height: 100%;
+			/*width: 485px;*/
+			border-radius: 200px;
+			border: 10px solid brown;
+		}
+
+		.card {
+			/*height: 50%;
+			width: 50%;*/
+			/*position: relative;*/
+			/*right: -30px;*/
+		}
+		/*.card:nth-child(2){
+			left: -40px;
+		}
+		.card:nth-child(3){
+			left: -80px;
+		}
+		.card:nth-child(4){
+			left: -120px;
+		}*/
+
+		#dealer {
+			margin-top: 30px;
+			/*height: 123px;*/
+		}
+
+		#middle {
+			height: 200px;
+		}
+
+		#middle #prompts {
+			height: 75px;
+		}
+
+		#middle #menu {
+			margin-top: 20px;
+			height: 25px;
+		}
+
+		#menu #hit, #menu #stand {
+			display: none;
+		}
+
+		#chatbox {
+			height: 100%;
+			border: 2px solid black;
+			padding: 5px;
+			white-space: nowrap;
+			overflow: scroll;
+		}
+
+		#chatbox table tbody tr:first-child {
+			background-color: gold;
+		}
+
+		#chatbox table tbody tr:nth-child(2) {
+			background-color: silver;
+		}
+
+		#chatbox table tbody tr:nth-child(3) {
+			background-color: orange;
+		}
+
+
+	</style>
+</head>
+<body ng-controller='usersController'>
+	<nav class="navbar navbar-default" style="margin-bottom: 20px;">
+		<div class="container">
+			<button class="btn btn-default navbar-btn"><a href="/users/<%= currentUser._id %>" class="navbar-link">My Stats</a></button> 
+			<button class="btn btn-default navbar-btn pull-right"><a href="/logout" class="navbar-link">Logout</a></button> 
+		</div>
+	</nav>
+	<div class="container">
+		<div class="row" id="upper_content">
+			<div id="table" class="col-xs-6">
+				<div style="text-align: center;">
+					<div id="dealer"></div>
+					<div id="middle">
+					<div id="dealer_score">
+					</div>
+					<div id="prompts">
+					</div>
+					<h5 id='record' wins="<%= currentUser.record.wins%>" losses="currentUser.record.losses">Wins / Losses: <%= currentUser.record.wins%> / <%= currentUser.record.losses%></h5>
+					<div id="menu">
+						<button id="hit" class="btn btn-danger">Hit me!</button>
+						<button id="stand" class="btn btn-warning">Stand</button>
+						<button id="new_game" class="btn btn-primary" data="<%= currentUser._id %>">New Game</button>
+					</div>
+					</div>
+					<div id="Your_score">
+					</div>
+					<div id="Your"></div>
+					</div>
+				</div>
+			<div class="col-xs-4 col-xs-offset-1" id="chatbox">
+				<table class="table table-bordered table-striped">
+					<thead>
+						<th>Name</th>
+						<th>Wins</th>
+						<th>Win Rate</th>
+					</thead>
+					<tbody>
+						<tr ng-repeat="user in users | orderBy: ['-record.wins', 'record.losses']"><td id='{{user._id}}'><a ng-href="/users/{{user._id}}">{{user.name}}</a></td><td>{{user.record.wins}}</td><td>{{(user.record.wins / (user.record.losses + user.record.wins))*100 | number : 0}}</td></tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

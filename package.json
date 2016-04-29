@@ -1,0 +1,16 @@
+{
+  "name": "blackjack",
+  "version": "0.0.1",
+  "dependencies": {
+    "body-parser": "latest",
+    "ejs": "latest",
+    "express": "latest",
+    "express-session": "^1.13.0",
+    "mongoose": "latest",
+    "mongoose-validator": "latest",
+    "passport": "latest",
+    "passport-facebook": "latest",
+    "passport-google-oauth": "^1.0.0",
+    "socket.io": "^1.4.5"
+  }
+}

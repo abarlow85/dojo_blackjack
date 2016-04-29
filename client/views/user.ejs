@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html ng-app='myApp'>
+<head>
+	<title>blackjack</title>
+	<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="/bower_components/jquery/dist/jquery.min.js"></script>
+    <link href="/bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+	 <script src="/bower_components/angular/angular.js"></script>
+    <script src="../js/controller/usersController.js"></script>
+    <script src="../js/controller/statsController.js"></script>
+    <script src="../js/model/userFactory.js"></script>
+
+</head>
+<body ng-controller='statsController'>
+	<nav class="navbar navbar-default" style="margin-bottom: 20px;">
+		<div class="container">
+			<button class="btn btn-default navbar-btn"><a href="/dashboard" class="navbar-link">Dashboard</a></button> 
+			<button class="btn btn-default navbar-btn pull-right"><a href="/logout" class="navbar-link">Logout</a></button> 
+		</div>
+	</nav>
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12">
+				<h2>{{user.name}}'s game statistics:</h2>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-4">
+				<h3>Wins: {{user.record.wins}}</h3>
+			</div>
+			<div class="col-xs-4">
+				<h3>Losses: {{user.record.losses}}</h3>
+			</div>
+			<div class="col-xs-4">
+				<h3>Total Games: {{user.games.length}}</h3>
+			</div>
+		</div>
+		<div class="row" style="text-align: center;">
+			<div class="col-xs-10 col-xs-offset-1">
+				<p class="col-xs-1" ng-repeat='n in [11, 12,13,14,15,16,17,18,19,20,21]' style="display: inline-block; margin-bottom: 0px;">{{n}}</p>
+			</div>
+		</div>
+		<div class="row" style="text-align: right;">
+			<div class="col-xs-1" style="height: 300px; border-right: 1px solid black;">
+				<p style="margin-top: 50%">Wins:</p>
+			</div>
+			<div class="col-xs-10" style="border-top: 1px solid black;">
+				<div class="col-xs-1" ng-repeat="(score, value) in scores" style="position: relative; bottom: 1px;">
+					<div class="col-xs-1" style="height: {{scores[score]*4}}px; background-color: green;">
+					</div>
+				</div>
+			</div>
+		</div>
+
+</body>
+</html>
+
