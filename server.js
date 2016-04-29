@@ -6,6 +6,7 @@ var passport = require('passport');
 var session = require('express-session');
 
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({secret: 'dojocodesfeb22'}));
 app.use(passport.initialize());
 app.use(passport.session());
